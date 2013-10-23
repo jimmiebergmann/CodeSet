@@ -1,0 +1,23 @@
+# Directories #
+Obj
+obj
+Ignore
+
+# Compiled #
+*.exe
+*.dll
+
+# Build #
+*.ilk
+*.ncb
+*.suo
+*.user
+*.pdb
+*.sdf
+*.opensdf
+*.layout
+*.depend
+
+# Extra #
+*.zip
+*.rar
