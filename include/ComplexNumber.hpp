@@ -22,11 +22,43 @@
 //    source distribution.
 // ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __CS_JULIASET_HPP__
-#define __CS_JULIASET_HPP__
+#ifndef __CS_COMPLEXNUMBER_HPP__
+#define __CS_COMPLEXNUMBER_HPP__
+
 
 namespace CS
 {
+
+	template< typename T>
+	class ComplexNumber
+	{
+
+	public:
+
+		ComplexNumber( ):
+			x( 0.0f ),
+			y( 0.0f )
+		{ }
+
+
+		ComplexNumber(T p_X, T p_Y ) :
+			x( p_X ),
+			y( p_Y )
+		{ }
+
+		ComplexNumber Square( )
+		{
+			return ComplexNumber( x*x - y*y, 2.0f*x*y );
+		}
+
+		ComplexNumber operator + ( const ComplexNumber & p_Point) const
+		{
+			return ComplexNumber( x + p_Point.x, y + p_Point.y );
+		}
+
+		T x;
+		T y;
+	};
 
 }
 

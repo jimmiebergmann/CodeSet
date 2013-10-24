@@ -21,3 +21,58 @@
 // 3. This notice may not be removed or altered from any
 //    source distribution.
 // ///////////////////////////////////////////////////////////////////////////
+
+#include <Fractal.hpp>
+
+namespace CS
+{
+
+
+	// Constructor/destructor
+	Fractal::Fractal(	const int p_Width, const int p_Height,
+						const double p_GridScaleX, const double p_GridScaleY,
+						const double p_GridDiffX, const double p_GridDiffY ) :
+		m_Width( p_Width ),
+		m_Height( p_Height ),
+		m_GridScaleX( p_GridScaleX ),
+		m_GridScaleY( p_GridScaleY ),
+		m_GridDiffX( p_GridDiffX ),
+		m_GridDiffY( p_GridDiffY )
+	{
+	}
+
+	Fractal::~Fractal( )
+	{
+	}
+
+
+	// Set functions
+	void Fractal::SetWidth( const int p_Width )
+	{
+		m_Width = p_Width;
+	}
+
+	void Fractal::SetHeight( const int p_Height )
+	{
+		m_Height = p_Height;
+	}
+
+	void Fractal::SetSize( const int p_Width, const int p_Height )
+	{
+		m_Width = p_Width;
+		m_Height = p_Height;
+	}
+
+	// Get functions
+	int Fractal::GetWidth( ) const
+	{
+		return m_Width;
+	}
+
+	int Fractal::GetHeight( ) const
+	{
+		return m_Height;
+	}
+
+
+}

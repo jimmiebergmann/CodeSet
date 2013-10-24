@@ -21,3 +21,31 @@
 // 3. This notice may not be removed or altered from any
 //    source distribution.
 // ///////////////////////////////////////////////////////////////////////////
+
+#ifndef __CS_MANDELBROTSET_HPP__
+#define __CS_MANDELBROTSET_HPP__
+
+#include <Fractal.hpp>
+
+namespace CS
+{
+
+	class MandelbrotSet : public Fractal
+	{
+
+	public:
+
+		// Constructor/destructor
+		MandelbrotSet(	const int p_Width, const int p_Height,
+						const double p_GridScaleX, const double p_GridScaleY,
+						const double p_GridDiffX, const double p_GridDiffY );
+		~MandelbrotSet( );
+
+		// Public general function
+		virtual int Iterate( const int p_X, const int p_Y, const int p_Precision, const double p_Zoom ) ;
+
+	};
+
+}
+
+#endif

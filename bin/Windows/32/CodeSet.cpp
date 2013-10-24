@@ -28,9 +28,9 @@ namespace CS
 		}
 
 		// Read the file size and set the read size
-		fin.seekg( 0, fin.end );
+		fin.seekg( std::ios::end );
 		int fileSize = fin.tellg( );
-		fin.seekg( 0, fin.beg );
+		fin.seekg( 0 );
 		int ReadSize = fileSize < p_MaxLength ? fileSize : p_MaxLength;
 
 		// Read the file
@@ -47,14 +47,6 @@ namespace CS
 
 	void CodeSet::ProcessString( )
 	{
-		for( int i = 0; i < m_String.size( ); i++ )
-		{
-			if( m_String[ i ] == '\n' ||
-				m_String[ i ] == '\t')
-			{
-				m_String[ i ] = ' ';
-			}
-		}
 	}
 
 	char * CodeSet::WriteToString( )
@@ -84,8 +76,8 @@ namespace CS
 
 				if( n == m_Precision )
 				{
-					//fout << "#";
-					fout << m_String[ CurrChar ];
+					fout << "#";
+					//fout << m_String[ CurrChar ];
 					CurrChar++;
 
 					if( CurrChar == m_String.size( ) )
@@ -94,12 +86,12 @@ namespace CS
 						break;
 					}
 
-					//std::cout << "#";
+					std::cout << "#";
 				}
 				else
 				{
-					fout << " ";
-					//std::cout << " ";
+					//fout << " ";
+					std::cout << " ";
 				}
 			}
 
@@ -108,7 +100,7 @@ namespace CS
 				break;
 			}
 
-			fout << "\n";
+			//fout << "\n";
 		}
 
 
