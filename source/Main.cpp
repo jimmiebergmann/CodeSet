@@ -25,47 +25,80 @@
 #include <CodeSet.hpp>
 #include <MandelbrotSet.hpp>
 #include <JuliaSet.hpp>
+#include <SyntaxCPP.hpp>
 #include <iostream>
 
 using namespace CS;
 
-int CloseApplication( )
-{
-	std::cin.get( );
-	return 0;
-}
+
+// Settings
+static const int width = 140;
+static const int height = 30;
+
+static Syntax * pSyntax = NULL;
+static Fractal * pFractal = NULL;
+static CodeSet * pCodeSet = NULL;
+
+static int CloseApplication( );
+
 
 int main( )
 {
-	// Settings
-	const int width = 140;
-	const int height = 30;
-
-	// Create the codeset, use a mandelbrot set
-	Fractal * pFractal = new MandelbrotSet( width, height, 5000, 1.3f, 3.5, 2, -2.5, -1 );
-	//Fractal * pFractal = new JuliaSet( width, height, 5000, 1.2f, 3.5, 2, -2.5, -1 );
-
-	CodeSet codeSet( pFractal );
-
-	// Open the file we want
-	if( !codeSet.OpenFile( "CodeSet.cpp", width * height * 4 ) )
+	// Create a syntax
+	pSyntax = new SyntaxCPP( );
+	
+	// Read the file
+	if( !pSyntax->ReadFile( "CodeSet.cpp", width * height * 4 ) )
 	{
 		std::cout << "Can not open the file." << std::endl;
 		return CloseApplication( );
 	}
 
-	// Process the file data
-	codeSet.ProcessString( );
+	// Generate the words
+	pSyntax->MakeCompact( );
 
-	// Write the file
-	if( !codeSet.WriteToFile( "CodeSet_CodeSet.cpp" ) )
+
+
+	// Create a fractal
+	pFractal = new MandelbrotSet( width, height, 5000, 1.3f, 3.5, 2, -2.5, -1 );
+	//Fractal * pFractal = new JuliaSet( width, height, 5000, 1.2f, 3.5, 2, -2.5, -1 );
+
+
+
+	// Create the codeset, use a mandelbrot set
+	pCodeSet = new CodeSet( pSyntax, pFractal );
+
+	// Write code set to a file
+	if( !pCodeSet->WriteToFile( "CodeSet_CodeSet.cpp" ) )
 	{
 		std::cout << "Can not write to file." << std::endl;
 		return CloseApplication( );
 	}
 
-	// Clean up
-	delete pFractal;
+
+
+	return CloseApplication( );
+}
+
+int CloseApplication( )
+{
+	if( pSyntax )
+	{
+		delete pSyntax;
+		pSyntax = NULL;
+	}
+
+	if( pFractal )
+	{
+		delete pFractal;
+		pFractal = NULL;
+	}
+
+	if( pCodeSet )
+	{
+		delete pCodeSet;
+		pCodeSet = NULL;
+	}
 
 	return 0;
 }

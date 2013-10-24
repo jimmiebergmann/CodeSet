@@ -13,16 +13,20 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\CodeSet.hpp" />
     <ClInclude Include="..\..\include\ComplexNumber.hpp" />
+    <ClInclude Include="..\..\include\SyntaxCPP.hpp" />
     <ClInclude Include="..\..\include\Fractal.hpp" />
     <ClInclude Include="..\..\include\JuliaSet.hpp" />
     <ClInclude Include="..\..\include\MandelbrotSet.hpp" />
+    <ClInclude Include="..\..\include\Syntax.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\CodeSet.cpp" />
+    <ClCompile Include="..\..\source\SyntaxCPP.cpp" />
     <ClCompile Include="..\..\source\Fractal.cpp" />
     <ClCompile Include="..\..\source\JuliaSet.cpp" />
     <ClCompile Include="..\..\source\Main.cpp" />
     <ClCompile Include="..\..\source\MandelbrotSet.cpp" />
+    <ClCompile Include="..\..\source\Syntax.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{104C79D9-0F92-4765-9245-E85CBFEC98E6}</ProjectGuid>

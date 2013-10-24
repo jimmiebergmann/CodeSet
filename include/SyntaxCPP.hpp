@@ -22,53 +22,29 @@
 //    source distribution.
 // ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __CS_FRACTAL_HPP__
-#define __CS_FRACTAL_HPP__
+#ifndef __CS_SYNTAX_CPP_HPP__
+#define __CS_SYNTAX_CPP_HPP__
+
+#include <Syntax.hpp>
 
 namespace CS
 {
 
-	class Fractal
+	class SyntaxCPP : public Syntax
 	{
 
 	public:
 
 		// Constructor/destructor
-		Fractal(	const int p_Width, const int p_Height,
-					const int p_Precision, const double p_Zoom,
-					const double p_GridScaleX, const double p_GridScaleY,
-					const double p_GridDiffX, const double p_GridDiffY );
-		virtual ~Fractal( );
+		SyntaxCPP( );
+		~SyntaxCPP( );
 
 		// Public general function
-		virtual int Iterate( const int p_X, const int p_Y ) = 0;
-		
-		// Set functions
-		void SetWidth( const int p_Width );
-		void SetHeight( const int p_Height );
-		void SetSize( const int p_Width, const int p_Height );
-		void SetPrecision( const int p_Precision );
-		void SetZoom( const double p_Zoom );
+		virtual void MakeCompact( );
 
-		// Get functions
-		int GetWidth( ) const;
-		int GetHeight( ) const;
-		int GetPrecision( ) const;
-		double GetZoom( ) const;
-
-	protected:
-
-		int m_Width;
-		int m_Height;
-		int m_Precision;
-		double m_Zoom;
-		double m_GridScaleX;
-		double m_GridScaleY;
-		double m_GridDiffX;
-		double m_GridDiffY;
 
 	};
 
-};
+}
 
 #endif

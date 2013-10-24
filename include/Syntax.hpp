@@ -22,50 +22,40 @@
 //    source distribution.
 // ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __CS_FRACTAL_HPP__
-#define __CS_FRACTAL_HPP__
+#ifndef __CS_SYNTAX_HPP__
+#define __CS_SYNTAX_HPP__
+
+#include <string>
+#include <vector>
 
 namespace CS
 {
 
-	class Fractal
+	class Syntax
 	{
 
 	public:
 
 		// Constructor/destructor
-		Fractal(	const int p_Width, const int p_Height,
-					const int p_Precision, const double p_Zoom,
-					const double p_GridScaleX, const double p_GridScaleY,
-					const double p_GridDiffX, const double p_GridDiffY );
-		virtual ~Fractal( );
+		Syntax( );
+		virtual ~Syntax( );
 
 		// Public general function
-		virtual int Iterate( const int p_X, const int p_Y ) = 0;
-		
-		// Set functions
-		void SetWidth( const int p_Width );
-		void SetHeight( const int p_Height );
-		void SetSize( const int p_Width, const int p_Height );
-		void SetPrecision( const int p_Precision );
-		void SetZoom( const double p_Zoom );
+		bool ReadFile( const char * p_FilePath, const int p_MaxCharacters );
+		virtual void MakeCompact( ) = 0;
+		void ClearLines( );
+		void ClearWords( );
 
 		// Get functions
-		int GetWidth( ) const;
-		int GetHeight( ) const;
-		int GetPrecision( ) const;
-		double GetZoom( ) const;
+		unsigned int GetWordCount( ) const;
+		std::string GetWord( const unsigned int p_Index ) const;
 
 	protected:
 
-		int m_Width;
-		int m_Height;
-		int m_Precision;
-		double m_Zoom;
-		double m_GridScaleX;
-		double m_GridScaleY;
-		double m_GridDiffX;
-		double m_GridDiffY;
+		typedef std::vector< std::string > StringVector;
+
+		StringVector m_Lines;
+		StringVector m_Words;
 
 	};
 

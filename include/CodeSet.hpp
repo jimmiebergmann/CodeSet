@@ -26,6 +26,7 @@
 #define __CS_CODESET_HPP__
 
 #include <Fractal.hpp>
+#include <Syntax.hpp>
 #include <string>
 
 namespace CS
@@ -37,22 +38,17 @@ namespace CS
 	public:
 
 		// Constructor/destructor
-		CodeSet( Fractal * p_pFractal );
+		CodeSet( Syntax * p_pSyntax, Fractal * p_pFractal );
 		~CodeSet( );
 
 		// Public general function
-		bool OpenFile( const char * p_pFilePath, int p_MaxLength );
-		void ProcessString( ); // Remove comments, gaps, ...
-		char * WriteToString( );
 		bool WriteToFile( const char * p_pFilePath );
-
-		// Set functions
-		void SetString( const std::string & p_String );
+		char * WriteToString( );
 
 	private:
 
 		Fractal * m_pFractal;
-		std::string m_String;
+		Syntax * m_pSyntax;
 
 	};
 

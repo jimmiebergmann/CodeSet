@@ -30,7 +30,8 @@ namespace CS
 {
 
 	// Constructor/destructor
-	CodeSet::CodeSet( Fractal * p_pFractal) :
+	CodeSet::CodeSet( Syntax * p_pSyntax, Fractal * p_pFractal ) :
+		m_pSyntax( p_pSyntax ),
 		m_pFractal( p_pFractal )
 	{
 	}
@@ -40,7 +41,7 @@ namespace CS
 	}
 
 	// Public general function
-	bool CodeSet::OpenFile( const char * p_pFilePath, int p_MaxLength )
+	/*bool CodeSet::OpenFile( const char * p_pFilePath, int p_MaxLength )
 	{
 		// Open the file
 		std::ifstream fin( p_pFilePath, std::fstream::binary );
@@ -68,9 +69,9 @@ namespace CS
 		fin.close( );
 
 		return true;
-	}
+	}*/
 
-	void CodeSet::ProcessString( )
+	/*void CodeSet::ProcessString( )
 	{
 		// Ugly way of removing characters that we do not want.
 		for( int i = 0; i < m_String.size( ); i++ )
@@ -82,12 +83,7 @@ namespace CS
 				m_String[ i ] = ' ';
 			}
 		}
-	}
-
-	char * CodeSet::WriteToString( )
-	{
-		return NULL;
-	}
+	}*/
 
 	bool CodeSet::WriteToFile( const char * p_pFilePath )
 	{
@@ -113,15 +109,16 @@ namespace CS
 				if( n == m_pFractal->GetPrecision( ) )
 				{
 					// Write the current character
-					fout << m_String[ CurrChar ];
+					fout << "#";
+					//fout << m_String[ CurrChar ];
 					CurrChar++;
 
 					// Are we out of characters?
-					if( CurrChar == m_String.size( ) )
+					/*if( CurrChar == m_String.size( ) )
 					{
 						KeepLooping = false;
 						break;
-					}
+					}*/
 				}
 				// Write a space if the current pixel is outside the mandelbrot set.
 				else
@@ -145,10 +142,9 @@ namespace CS
 		return true;
 	}
 
-	// Set functions
-	void CodeSet::SetString( const std::string & p_String )
+	char * CodeSet::WriteToString( )
 	{
-		m_String = p_String;
+		return NULL;
 	}
 
 }
