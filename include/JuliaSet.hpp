@@ -31,3 +31,51 @@ namespace CS
 }
 
 #endif
+
+/*
+static int IterateJulia( const double x, const double y, const int max, const double zoom )
+{
+	double t = zoom;
+	ComplexNumber c;
+	c.x = (sin(cos(t / 10) * 10) + cos(t * 2.0) / 4.0 + sin(t * 3.0) / 6.0) * 0.8;
+	c.y = (cos(sin(t / 10) * 10) + sin(t * 2.0) / 4.0 + cos(t * 3.0) / 6.0) * 0.8;
+	
+
+	
+	const double scalex = 3.0;
+	const double scaley = 2.0;
+	const double diffx = -1.5f;
+	const double diffy = -1.0f;
+
+	ComplexNumber z;
+	z.x = ( scalex / ( (double)width / (double)x ) + diffx ) / zoom;
+	z.y = ( scaley / ( (double)height / (double)y ) + diffy) / zoom;
+
+	int n;
+
+	for( n = 0; n < max; n++ )
+	{
+		double newx = ( z.x * z.x - z.y * z.y ) + c.x;
+		double newy = ( z.y * z.x + z.x * z.y ) + c.y;
+
+		if( ( newx * newx + newy * newy ) > 4.0f )
+		{
+			break;
+		}
+
+		z.x = newx;
+		z.y = newy;
+
+	}
+	//while( (z.x*z.x + z.y*z.y) < 16.0f && n < max )
+	//{
+		// Multiply the complex number z with z, then add c
+		//z = z.Square( ) + c;
+
+		//n++;
+	//}
+
+	return n;
+}
+
+*/
