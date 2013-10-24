@@ -35,12 +35,13 @@ namespace CS
 
 		// Constructor/destructor
 		Fractal(	const int p_Width, const int p_Height,
+					const int p_Precision, const double p_Zoom,
 					const double p_GridScaleX, const double p_GridScaleY,
 					const double p_GridDiffX, const double p_GridDiffY );
 		virtual ~Fractal( );
 
 		// Public general function
-		virtual int Iterate( const int p_X, const int p_Y, const int p_Precision, const double p_Zoom ) = 0;
+		virtual int Iterate( const int p_X, const int p_Y ) = 0;
 		
 		// Set functions
 		void SetWidth( const int p_Width );
@@ -50,11 +51,19 @@ namespace CS
 		// Get functions
 		int GetWidth( ) const;
 		int GetHeight( ) const;
+		void SetPrecision( const int p_Precision );
+		void SetZoom( const double p_Zoom );
+
+		// Get functions
+		int GetPrecision( ) const;
+		double GetZoom( ) const;
 
 	protected:
 
 		int m_Width;
 		int m_Height;
+		int m_Precision;
+		double m_Zoom;
 		double m_GridScaleX;
 		double m_GridScaleY;
 		double m_GridDiffX;

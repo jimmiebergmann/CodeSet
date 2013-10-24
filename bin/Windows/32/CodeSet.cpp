@@ -34,7 +34,8 @@ namespace CS
 		int ReadSize = fileSize < p_MaxLength ? fileSize : p_MaxLength;
 
 		// Read the file
-		char * pBuffer = new char[ ReadSize ];
+		char * pBuffer = new char[ ReadSize + 1 ];
+		pBuffer[ ReadSize ] = 0;
 		fin.read( pBuffer, ReadSize );
 		m_String = pBuffer;
 		delete [ ] pBuffer;
@@ -132,10 +133,3 @@ namespace CS
 	{
 		return m_Precision;
 	}
-
-	double CodeSet::GetZoom( ) const
-	{
-		return m_Zoom;
-	}
-
-}

@@ -31,10 +31,13 @@ namespace CS
 
 	// Constructor/destructor
 	MandelbrotSet::MandelbrotSet(	const int p_Width, const int p_Height,
+									const int p_Precision, const double p_Zoom,
 									const double p_GridScaleX, const double p_GridScaleY,
 									const double p_GridDiffX, const double p_GridDiffY ) :
 	Fractal(	p_Width,
 				p_Height,
+				p_Precision,
+				p_Zoom,
 				p_GridScaleX,
 				p_GridScaleY,
 				p_GridDiffX,
@@ -47,16 +50,16 @@ namespace CS
 	}
 
 	// Public general function
-	int MandelbrotSet::Iterate( const int p_X, const int p_Y, const int p_Precision, const double p_Zoom )
+	int MandelbrotSet::Iterate( const int p_X, const int p_Y )
 	{
-		double newx = ( m_GridScaleX / ( (double)m_Width / (double)p_X ) + m_GridDiffX ) / p_Zoom;
-		double newy = ( m_GridScaleY / ( (double)m_Height / (double)p_Y ) + m_GridDiffY) / p_Zoom;
+		double newx = ( m_GridScaleX / ( (double)m_Width / (double)p_X ) + m_GridDiffX ) / m_Zoom;
+		double newy = ( m_GridScaleY / ( (double)m_Height / (double)p_Y ) + m_GridDiffY) / m_Zoom;
 
 		ComplexNumber<double> c( newx, newy );
 		ComplexNumber<double> z( c );
 		int n = 0;
 
-		while( (z.x*z.x + z.y*z.y) < 4.0f && n < p_Precision )
+		while( (z.x*z.x + z.y*z.y) < 4.0f && n < m_Precision )
 		{
 			// Multiply the complex number z with z, then add c
 			z = z.Square( ) + c;

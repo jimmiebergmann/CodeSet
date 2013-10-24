@@ -37,7 +37,7 @@ namespace CS
 	public:
 
 		// Constructor/destructor
-		CodeSet( Fractal * p_pFractal, const int p_Precision, const double p_Zoom );
+		CodeSet( Fractal * p_pFractal );
 		~CodeSet( );
 
 		// Public general function
@@ -48,18 +48,10 @@ namespace CS
 
 		// Set functions
 		void SetString( const std::string & p_String );
-		void SetPrecision( const int p_Precision );
-		void SetZoom( const double p_Zoom );
-
-		// Get functions
-		int GetPrecision( ) const;
-		double GetZoom( ) const;
 
 	private:
 
 		Fractal * m_pFractal;
-		int m_Precision;
-		double m_Zoom;
 		std::string m_String;
 
 	};

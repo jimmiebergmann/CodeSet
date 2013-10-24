@@ -24,6 +24,7 @@
 
 #include <CodeSet.hpp>
 #include <MandelbrotSet.hpp>
+#include <JuliaSet.hpp>
 #include <iostream>
 
 using namespace CS;
@@ -37,12 +38,14 @@ int CloseApplication( )
 int main( )
 {
 	// Settings
-	const int width = 100;
+	const int width = 140;
 	const int height = 30;
 
 	// Create the codeset, use a mandelbrot set
-	Fractal * pFractal = new MandelbrotSet( width, height, 3.5, 2, -2.5, -1 );
-	CodeSet codeSet( pFractal, 5000, 1.3f );
+	Fractal * pFractal = new MandelbrotSet( width, height, 5000, 1.3f, 3.5, 2, -2.5, -1 );
+	//Fractal * pFractal = new JuliaSet( width, height, 5000, 1.2f, 3.5, 2, -2.5, -1 );
+
+	CodeSet codeSet( pFractal );
 
 	// Open the file we want
 	if( !codeSet.OpenFile( "CodeSet.cpp", width * height * 4 ) )
@@ -61,32 +64,8 @@ int main( )
 		return CloseApplication( );
 	}
 
-
-
 	// Clean up
 	delete pFractal;
-
-	/*const int width = 80;
-	const int height = 22;
-	const int precision = 10000;
-
-	MandelbrotSet ms( width, height, 3.5, 2, -2.5, -1 );
-	
-	for( int y = 0 ; y < height; y++ )
-	{
-		for( int x = 0 ; x < width; x++ )
-		{
-			if( ms.Iterate( x, y, precision, 1.3 ) == precision )
-			{
-				std::cout << "#";
-			}
-			else
-			{
-				std::cout << " ";
-			}
-		}
-	}*/
-
 
 	return 0;
 }

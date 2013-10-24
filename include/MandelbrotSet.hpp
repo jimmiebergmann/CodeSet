@@ -37,12 +37,13 @@ namespace CS
 
 		// Constructor/destructor
 		MandelbrotSet(	const int p_Width, const int p_Height,
+						const int p_Precision, const double p_Zoom,
 						const double p_GridScaleX, const double p_GridScaleY,
 						const double p_GridDiffX, const double p_GridDiffY );
 		~MandelbrotSet( );
 
 		// Public general function
-		virtual int Iterate( const int p_X, const int p_Y, const int p_Precision, const double p_Zoom ) ;
+		virtual int Iterate( const int p_X, const int p_Y ) ;
 
 	};
 

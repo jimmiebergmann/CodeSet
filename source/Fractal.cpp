@@ -30,10 +30,13 @@ namespace CS
 
 	// Constructor/destructor
 	Fractal::Fractal(	const int p_Width, const int p_Height,
+						const int p_Precision, const double p_Zoom,
 						const double p_GridScaleX, const double p_GridScaleY,
 						const double p_GridDiffX, const double p_GridDiffY ) :
 		m_Width( p_Width ),
 		m_Height( p_Height ),
+		m_Precision( p_Precision ),
+		m_Zoom( p_Zoom ),
 		m_GridScaleX( p_GridScaleX ),
 		m_GridScaleY( p_GridScaleY ),
 		m_GridDiffX( p_GridDiffX ),
@@ -63,6 +66,16 @@ namespace CS
 		m_Height = p_Height;
 	}
 
+	void Fractal::SetPrecision( const int p_Precision )
+	{
+		m_Precision = p_Precision;
+	}
+
+	void Fractal::SetZoom( const double p_Zoom )
+	{
+		m_Zoom = p_Zoom;
+	}
+
 	// Get functions
 	int Fractal::GetWidth( ) const
 	{
@@ -72,6 +85,16 @@ namespace CS
 	int Fractal::GetHeight( ) const
 	{
 		return m_Height;
+	}
+
+	int Fractal::GetPrecision( ) const
+	{
+		return m_Precision;
+	}
+
+	double Fractal::GetZoom( ) const
+	{
+		return m_Zoom;
 	}
 
 
