@@ -1,135 +1,296 @@
-#include <CodeSet.hpp>
-#include <fstream>
-#include <iostream>
 
 namespace CS
 {
 
 	// Constructor/destructor
-	CodeSet::CodeSet( Fractal * p_pFractal, const int p_Precision, const double p_Zoom ) :
-		m_pFractal( p_pFractal ),
-		m_Precision( p_Precision ),
-		m_Zoom( p_Zoom )
+	SyntaxCPP::SyntaxCPP( ) :
+		Syntax( )
 	{
+
 	}
 
-	CodeSet::~CodeSet( )
+	SyntaxCPP::~SyntaxCPP( )
 	{
+
 	}
 
 	// Public general function
-	bool CodeSet::OpenFile( const char * p_pFilePath, int p_MaxLength )
+	void SyntaxCPP::MakeCompact( )
 	{
-		// Open the file
-		std::ifstream fin( p_pFilePath );
-		if( !fin.is_open( ) )
+		// Loop through all the lines
+		bool IsMultiLineComment = false;
+
+		for( int l = 0; l < m_Lines.size( ); l++ )
 		{
-			return false;
-		}
+			std::string word = "";
+			bool IsAString = false;
 
-		// Read the file size and set the read size
-		fin.seekg( std::ios::end );
-		int fileSize = fin.tellg( );
-		fin.seekg( 0 );
-		int ReadSize = fileSize < p_MaxLength ? fileSize : p_MaxLength;
-
-		// Read the file
-		char * pBuffer = new char[ ReadSize + 1 ];
-		pBuffer[ ReadSize ] = 0;
-		fin.read( pBuffer, ReadSize );
-		m_String = pBuffer;
-		delete [ ] pBuffer;
-
-		// Close the file
-		fin.close( );
-
-		return true;
-	}
-
-	void CodeSet::ProcessString( )
-	{
-	}
-
-	char * CodeSet::WriteToString( )
-	{
-		return NULL;
-	}
-
-	bool CodeSet::WriteToFile( const char * p_pFilePath )
-	{
-		// Open the file
-		std::ofstream fout( p_pFilePath );
-		if( !fout.is_open( ) )
-		{
-			return false;
-		}
-
-		
-		// Loop through the fractal size
-		int CurrChar = 0;
-		bool KeepLooping = true;
-
-		for( int y = 0; y < m_pFractal->GetHeight( ); y++ )
-		{
-			for( int x = 0; x < m_pFractal->GetWidth( ); x++ )
+			// Loop through all the characters in the line
+			for( int c = 0; c < m_Lines[ l ].size( ); c++ )
 			{
-				int n = m_pFractal->Iterate( x, y, m_Precision, m_Zoom );
+				char currChar = m_Lines[ l ][ c ];
 
-				if( n == m_Precision )
+
+				// Are we collecting a string?
+				if( IsAString && currChar != '\"')
 				{
-					fout << "#";
-					//fout << m_String[ CurrChar ];
-					CurrChar++;
+ 					word += currChar;
+					continue;
+				}
 
-					if( CurrChar == m_String.size( ) )
+				// Remove comments
+				
+
+				if( ( l + 1 ) < m_Lines.size( ) )
+				{
+					// Single line comments
+					if( currChar == '/' &&
+						m_Lines[ l ][ c + 1 ] == '/' )
 					{
-						KeepLooping = false;
+						// Finish the word
+						if( word.size( ) )
+						{
+							m_Words.push_back( word );
+							word = "";
+						}
 						break;
 					}
-
-					std::cout << "#";
 				}
+
+
+				if( word.size( ) )
+				{
+
+					// Check for new lines, the word is done
+					if( currChar == '\n' ||
+						currChar== '\r' )
+					{
+						// Finish the word
+						if( word.size( ) )
+						{
+							m_Words.push_back( word );
+							word = "";
+						}
+						continue;
+					}
+
+					// Check for spaces and preriods, the word is done
+					if( currChar == ' ' )
+					{
+						// Finish the word
+						if( word.size( ) )
+						{
+							m_Words.push_back( word );
+							word = "";
+						}
+						continue;
+					}
+
+					// Check for special characters
+					if( currChar == ';' ||
+						currChar == ',' ||
+						currChar == '.' ||
+						currChar == '(' ||
+						currChar == ')' ||
+						currChar == '{' ||
+						currChar == '}' ||
+						currChar == '[' ||
+						currChar == ']' ||
+						currChar == '<' ||
+						currChar == '>' ||
+						currChar == '=' ||
+						currChar == '+' ||
+						currChar == '-' ||
+						currChar == '*' ||
+						currChar == '/' )
+					{
+						// Finish the word
+						if( word.size( ) )
+						{
+							m_Words.push_back( word );
+							word = "";
+						}
+
+						// Add the chracter
+						word += currChar;
+
+						// Special case for operators
+						if( ( l + 1 ) < m_Lines.size( ) )
+						{
+							char nextChar = m_Lines[ l ][ c + 1 ];
+							
+							if( nextChar != '\r' && nextChar != '\n' &&
+								nextChar == '=' ||
+								nextChar == '+' ||
+								nextChar == '-' ||
+								nextChar == '>' ||
+								nextChar == '<' )
+							{
+								// Push back the sign to the word vector
+								word += nextChar;
+
+								// Move to the next character
+								c++;
+							}
+								
+						}
+
+						m_Words.push_back( word );
+						word = "";
+						continue;
+					}
+
+					// This is the end of a string
+					if( IsAString )
+					{
+						if( currChar == '\"' )
+						{
+							// Push back the old word
+							if( word.size( ) )
+							{
+								word += currChar;
+								m_Words.push_back( word );
+								word = "";
+							}
+
+							IsAString = false;
+							continue;
+						}
+					}
+
+					// Add the character to the word
+					word += currChar;
+					continue;					
+				}
+				// Not started on a word yet
 				else
 				{
-					//fout << " ";
-					std::cout << " ";
+					// Ignore spaces
+					if( currChar == ' ' )
+					{
+						continue;
+					}
+
+					// Skrip newline, tab and space
+					if( currChar == '\n' ||
+						currChar== '\r' ||
+						currChar== '\t' )
+					{
+						// Push back the old word
+						if( word.size( ) )
+						{
+							m_Words.push_back( word );
+							word = "";
+						}
+
+						continue;
+					}
+
+					// Preprocessor?
+					if(	currChar == '#' )
+					{
+						// Push back the old word
+						if( word.size( ) )
+						{
+							m_Words.push_back( word );
+							word = "";
+						}
+
+						// Puch back the rest of the line
+						word +=  m_Lines[ l ].substr( c );
+
+						// Remove newlines in the word
+						for( int i = 0; i < word.size( ); i++ )
+						{
+							if( word[ i ] == '\r' ||
+								word[ i ] == '\n' )
+							{
+								word.erase( i, 1 );
+							}
+						}
+
+						m_Words.push_back( word );
+						word = "";
+
+						// We are done with this line
+						break; 
+					}
+
+					// Is this a string?
+					if( currChar == '\"' )
+					{
+						// This is a new string
+						word += currChar;
+						IsAString = true;
+						continue;
+					}
+
+					// Add single character words
+					if(	currChar == ';' ||
+						currChar == ',' ||
+						currChar == '(' ||
+						currChar == ')' ||
+						currChar == '{' ||
+						currChar == '}' ||
+						currChar == '[' ||
+						currChar == ']' ||
+						currChar == '<' ||
+						currChar == '>' ||
+						currChar == '=' ||
+						currChar == '+' ||
+						currChar == '-' ||
+						currChar == '*' ||
+						currChar == '/' ||
+						currChar == '!' )
+					{
+						// Push back the old word
+						if( word.size( ) )
+						{
+							m_Words.push_back( word );
+							word = "";
+						}
+
+						// Push back the sign to the word vector
+						word += currChar;
+
+						// Special case for operators
+						if( ( l + 1 ) < m_Lines.size( ) )
+						{
+							char nextChar = m_Lines[ l ][ c + 1 ];
+							
+							if( nextChar != '\r' && nextChar != '\n' &&
+								nextChar == '=' ||
+								nextChar == '+' ||
+								nextChar == '-' ||
+								nextChar == '>' ||
+								nextChar == '<' )
+							{
+								// Push back the sign to the word vector
+								word += nextChar;
+
+								// Move to the next character
+								c++;
+							}
+								
+						}
+
+						m_Words.push_back( word );
+						word = "";
+						continue;
+					}
+
+					// Ok so, we found a character that is the beginning of a word
+					word += currChar;
 				}
 			}
+		}
 
-			if( !KeepLooping )
-			{
-				break;
-			}
-
-			//fout << "\n";
+		for( int i = 0; i < 80; i++ )
+		{
+			std::cout << i << ": " << m_Words[ i ] << std::endl;
 		}
 
 
-		//fout.write( m_String.c_str( ), m_String.size( ) );
-
-		// Close the file 
-		fout.close( );
-
-		return true;
 	}
 
-	// Set functions
-	void CodeSet::SetString( const std::string & p_String )
-	{
-	}
-
-	void CodeSet::SetPrecision( const int p_Precision )
-	{
-		m_Precision = p_Precision;
-	}
-
-	void CodeSet::SetZoom( const double p_Zoom )
-	{
-		m_Zoom = p_Zoom;
-	}
-
-	// Get functions
-	int CodeSet::GetPrecision( ) const
-	{
-		return m_Precision;
-	}
+}

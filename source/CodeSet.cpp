@@ -87,6 +87,12 @@ namespace CS
 
 	bool CodeSet::WriteToFile( const char * p_pFilePath )
 	{
+		if( !m_pSyntax->GetWordCount( ) )
+		{
+			return false;
+		}
+
+
 		// Open the file
 		std::ofstream fout( p_pFilePath );
 		if( !fout.is_open( ) )
@@ -94,9 +100,16 @@ namespace CS
 			return false;
 		}
 
+		/*for( int i = 0; i < m_pSyntax->GetWordCount( ); i++ )
+		{
+			fout << m_pSyntax->GetWord( i ) << "\n";
+		}*/
+
 		// Loop through the fractal size
-		int CurrChar = 0;
 		bool KeepLooping = true;
+		int currWordIndex = 0;
+		std::string currWord = m_pSyntax->GetWord( currWordIndex );
+		int FoundInts= 0;
 
 		for( int y = 0; y < m_pFractal->GetHeight( ); y++ )
 		{
@@ -108,21 +121,34 @@ namespace CS
 				// Print a character if the iteration == the precision
 				if( n == m_pFractal->GetPrecision( ) )
 				{
-					// Write the current character
-					fout << "#";
-					//fout << m_String[ CurrChar ];
-					CurrChar++;
+					FoundInts++;
 
-					// Are we out of characters?
-					/*if( CurrChar == m_String.size( ) )
+					// Have we found a spot for the current word?
+					if( FoundInts == currWord.size( ) )
 					{
-						KeepLooping = false;
-						break;
-					}*/
+						fout << currWord;
+						FoundInts = 0;
+
+						// Are we out of words?
+						if( ++currWordIndex == m_pSyntax->GetWordCount( )) 
+						{
+							KeepLooping = false;
+							break;
+						}
+
+						// Get the next word
+						currWord = m_pSyntax->GetWord( currWordIndex );
+					}
+
+					// Write the current character
+					//fout << "#";
 				}
 				// Write a space if the current pixel is outside the mandelbrot set.
 				else
 				{
+
+					// Stop finding
+					FoundInts = 0;
 					fout << " ";
 				}
 			}
@@ -135,7 +161,7 @@ namespace CS
 			// Finish the file with a new line
 			fout << "\n";
 		}
-
+		
 		// Close the file 
 		fout.close( );
 
