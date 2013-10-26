@@ -1,78 +1,36 @@
-/*
-this
-is
-a
-multicomment
+#include <string>
+#include <iostream>
+#include <fstream>
 
-
-*/
-
-
-// ///////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2013 Jimmie Bergmann - jimmiebergmann@gmail.com
-//
-// This software is provided 'as-is', without any express or
-// implied warranty. In no event will the authors be held
-// liable for any damages arising from the use of this software.
-//
-// Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute
-// it freely, subject to the following restrictions:
-//
-// 1. The origin of this software must not be misrepresented;
-//    you must not claim that you wrote the original software.
-//    If you use this software in a product, an acknowledgment
-//    in the product documentation would be appreciated but
-//    is not required.
-//
-// 2. Altered source versions must be plainly marked as such,
-//    and must not be misrepresented as being the original software.
-//
-// 3. This notice may not be removed or altered from any
-//    source distribution.
-// ///////////////////////////////////////////////////////////////////////////
 
 namespace CS1
 {
 
-	class Fractal
+	class Syntax
 	{
 
 	public:
 
 		// Constructor/destructor
-		Fractal(	const int p_Width, const int p_Height, /* lol lol lol   */
-					const int p_Precision, const double p_Zoom,
-					const double p_GridScaleX, const double p_GridScaleY,
-					const double p_GridDiffX, const double p_GridDiffY );
-		virtual ~Fractal( );
+		Syntax( );
+		virtual ~Syntax( );
+
+		// Virtual functions
+		virtual void MakeCompact( ) = 0;
+		virtual std::string GetWord( const unsigned int p_Index ) = 0;
 
 		// Public general function
-		virtual int Iterate( const int p_X, const int p_Y ) = 0;
-		
+		bool ReadFile( const char * p_FilePath, const int p_MaxCharacters );
+
 		// Set functions
-		void SetWidth( const int p_Width );
-		void SetHeight( const int p_Height );
-		void SetSize( const int p_Width, const int p_Height );
-		void SetPrecision( const int p_Precision );
-		void SetZoom( const double p_Zoom );
+		void SetText( const std::string & p_Text );
 
 		// Get functions
-		int GetWidth( ) const;
-		int GetHeight( ) const;
-		int GetPrecision( ) const;
-		double GetZoom( ) const;
+		const std::string & GetText( ) const;
 
 	protected:
 
-		int m_Width;
-		int m_Height;
-		int m_Precision;
-		double m_Zoom;
-		double m_GridScaleX;
-		double m_GridScaleY;
-		double m_GridDiffX;
-		double m_GridDiffY;
+		std::string m_Text;
 
 	};
 
@@ -83,74 +41,77 @@ namespace CS1
 namespace CS1
 {
 
-
 	// Constructor/destructor
-	Fractal::Fractal(	const int p_Width, const int p_Height,
-						const int p_Precision, const double p_Zoom,
-						const double p_GridScaleX, const double p_GridScaleY,
-						const double p_GridDiffX, const double p_GridDiffY ) :
-		m_Width( p_Width ),
-		m_Height( p_Height ),
-		m_Precision( p_Precision ),
-		m_Zoom( p_Zoom ),
-		m_GridScaleX( p_GridScaleX ),
-		m_GridScaleY( p_GridScaleY ),
-		m_GridDiffX( p_GridDiffX ),
-		m_GridDiffY( p_GridDiffY )
+	Syntax::Syntax( ) :
+		m_Text( "" )
 	{
 	}
 
-	Fractal::~Fractal( )
+	Syntax::~Syntax( )
 	{
 	}
 
+	// Public general function
+	bool Syntax::ReadFile( const char * p_pFilePath, const int p_MaxCharacters )
+	{
+		// Open the file
+		std::ifstream fin( p_pFilePath, std::fstream::binary );
+		if( !fin.is_open( ) )
+		{
+			return false;
+		}
+
+		// Read the file size
+		fin.seekg( 0, fin.end );
+		int fileSize = fin.tellg( );
+		fin.seekg( 0, fin.beg );
+		int readSize = ( fileSize < p_MaxCharacters ) ? fileSize : p_MaxCharacters;
+		m_Text.reserve( readSize + 1 );
+
+		// Read all the lines
+		int currentSize = 0;
+		std::string tempString;
+		tempString.reserve( 128 );
+		while( !fin.eof( ) )
+		{
+			// Get another 
+			std::getline( fin, tempString );
+
+			// Remove the newline(if any)
+			if( tempString.size( ) > 1 )
+			{
+				tempString.erase( tempString.size( ) - 1, 1 );
+			}
+
+			// Cur the line if needed and then break( too many characters
+			currentSize += tempString.size( );
+			if( currentSize > readSize )
+			{
+				tempString[ currentSize - readSize ] = 0;
+				m_Text += tempString + '\n';
+				break;
+			}
+
+			m_Text += tempString + '\n';	 
+
+		}
+
+		// Close the file
+		fin.close( );
+
+		return true;
+	}
 
 	// Set functions
-	void Fractal::SetWidth( const int p_Width )
+	void Syntax::SetText( const std::string & p_Text )
 	{
-		m_Width = p_Width;
-	}
-
-	void Fractal::SetHeight( const int p_Height )
-	{
-		m_Height = p_Height;
-	}
-
-	void Fractal::SetSize( const int p_Width, const int p_Height )
-	{
-		m_Width = p_Width;
-		m_Height = p_Height;
-	}
-
-	void Fractal::SetPrecision( const int p_Precision )
-	{
-		m_Precision = p_Precision;
-	}
-
-	void Fractal::SetZoom( const double p_Zoom )
-	{
-		m_Zoom = p_Zoom;
+		m_Text = p_Text;
 	}
 
 	// Get functions
-	int Fractal::GetWidth( ) const
+	const std::string & Syntax::GetText( ) const
 	{
-		return m_Width;
-	}
-
-	int Fractal::GetHeight( ) const
-	{
-		return m_Height;
-	}
-
-	int Fractal::GetPrecision( ) const
-	{
-		return m_Precision;
-	}
-
-	double Fractal::GetZoom( ) const
-	{
-		return m_Zoom;
+		return m_Text;
 	}
 
 

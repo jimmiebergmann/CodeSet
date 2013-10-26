@@ -32,8 +32,8 @@ using namespace CS;
 
 
 // Settings
-static const int width = 160;
-static const int height = 36;
+static const int width = 220;
+static const int height = 50;
 
 static Syntax * pSyntax = NULL;
 static Fractal * pFractal = NULL;

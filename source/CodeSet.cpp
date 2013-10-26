@@ -56,7 +56,7 @@ namespace CS
 		}
 
 		// Get the cool string
-	/*	char * pBuffer = WriteToString( );
+		char * pBuffer = WriteToString( );
 
 		// Errorcheck the buffer
 		if( !pBuffer )
@@ -66,17 +66,17 @@ namespace CS
 
 		// write the buffer
 		fout << pBuffer;
-		*/
+		
 		// Test
-		for( int i = 0; i < m_pSyntax->GetText( ).size( ); i++ )
+		/*for( int i = 0; i < m_pSyntax->GetText( ).size( ); i++ )
 		{
 			std::string word = m_pSyntax->GetWord( i );
 			i += word.size( );
 			fout << word << "\n";
-		}
+		}*/
 
 		// Delete the buffer
-		//delete [ ] pBuffer;
+		delete [ ] pBuffer;
 
 		//fout << m_pSyntax->GetText( );
 
@@ -138,28 +138,27 @@ namespace CS
 		std::string word = m_pSyntax->GetWord( wordIndex );
 		if( !word.size( ) ) // Make sure that the word is at least something...
 		{
-			word = "#";
+			word = " ";
 		}
 
 		// The total number of found points in a row
 		int foundPoints = 0; 
 
-		for( int i = 0; i < m_pSyntax->GetText( ).size( ); i++ )
+		/*for( int i = 0; i < m_pSyntax->GetText( ).size( ); i++ )
 		{
 			word = m_pSyntax->GetWord( i );
-
+			 
 			i += word.size( );
 			if( word.size( ) ) // We need to decrease the index to correct the location
 			{
 				i--;
 			}
-
-			std::cout << word << "\n";
-		}
+			//std::cout << word << "\n";
+		}*/
 
 
 		// Go though the fractal
-		/*for( int y = 0; y < m_pFractal->GetHeight( ); y++ )
+		for( int y = 0; y < m_pFractal->GetHeight( ); y++ )
 		{
 			for( int x = 0; x < m_pFractal->GetWidth( ); x++ )
 			{
@@ -188,8 +187,8 @@ namespace CS
 
 						// Get a new word
 						wordIndex += word.size( );
-	
 						word = m_pSyntax->GetWord( wordIndex );
+
 						if( !word.size( ) ) // Make sure that the word is at least something...
 						{
 							word = " ";
@@ -202,7 +201,7 @@ namespace CS
 					foundPoints = 0;
 				}
 			}
-		}*/
+		}
 
 		// Set end char
 		pBuffer[ bufferSize - 1 ] = 0;
