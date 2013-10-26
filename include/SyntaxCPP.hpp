@@ -47,7 +47,10 @@ namespace CS
 
 		void RemoveMultiLineComments( );
 		void RemoveSingleLineComments( );
+		void MakePreCode( );
+		void MakePostCode( );
 		void RemoveTabsNewlines( );
+
 		
 	};
 

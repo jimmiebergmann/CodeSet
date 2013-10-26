@@ -95,6 +95,8 @@ namespace CS
 		
 		RemoveMultiLineComments( );
 		RemoveSingleLineComments( );
+		MakePreCode( );
+		MakePostCode( );
 		RemoveTabsNewlines( );
 
 		std::cout << m_Text << std::endl;
@@ -122,7 +124,8 @@ namespace CS
 				// We found the end, return the string
 				if( c == sc )
 				{
-					return  m_Text.substr( p_Index, i - p_Index );
+					std::string com = m_Text.substr( p_Index, ( i - p_Index)  + 1  );
+					return com;
 				}
 			}
 
@@ -260,6 +263,41 @@ namespace CS
 			}
 
 		}
+	}
+
+	void SyntaxCPP::MakePreCode( )
+	{
+		static const std::string findString = "#include";
+		std::string includeDirectives = "";
+		std::size_t found = 0;
+
+		// Find all the directives
+		for( std::size_t i = 0; i < m_Text.size( ); i++ )
+		{
+			// Find an include directive
+			if( ( found = m_Text.find( "#include", i ) ) != std::string::npos )
+			{
+				// Erase the line
+				std::size_t newline = m_Text.find( "\n", found + findString.size( ) );
+				if( newline != std::string::npos )
+				{
+					// Get the directive
+					includeDirectives += m_Text.substr(  found, newline - found ) + "\n";
+					m_Text.erase( found, newline - found );
+
+					// Move the index
+					i = found;
+				}
+			}
+		}
+
+		// Set the precode
+		m_PreCode = includeDirectives;
+	}
+
+	void SyntaxCPP::MakePostCode( )
+	{
+		m_PostCode = "Happy coding ==(^..^)==";
 	}
 
 	void SyntaxCPP::RemoveTabsNewlines( )

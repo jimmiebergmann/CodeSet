@@ -1,6 +1,5 @@
 #include <string>
-#include <iostream>
-#include <fstream>
+
 
 
 namespace CS1
@@ -36,7 +35,8 @@ namespace CS1
 
 };
 
-
+#include <iostream>
+#include <fstream>
 
 namespace CS1
 {
@@ -114,5 +114,35 @@ namespace CS1
 		return m_Text;
 	}
 
+
+}
+
+
+namespace CS1
+{
+
+	class SyntaxCPP : public Syntax
+	{
+
+	public:
+
+		// Constructor/destructor
+		SyntaxCPP( );
+		~SyntaxCPP( );
+
+		// Public virtual functions
+		virtual void MakeCompact( );
+		virtual std::string GetWord( const unsigned int p_Index );
+
+	private:
+
+		void RemoveMultiLineComments( );
+		void RemoveSingleLineComments( );
+		void MakePreCode( );
+		void MakePostCode( );
+		void RemoveTabsNewlines( );
+
+		
+	};
 
 }

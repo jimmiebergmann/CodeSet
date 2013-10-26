@@ -96,10 +96,31 @@ namespace CS
 		m_Text = p_Text;
 	}
 
+	void Syntax::SetPreCode( const std::string & p_PreCode )
+	{
+		m_PreCode = p_PreCode;
+	}
+
+	void Syntax::SetPostCode( const std::string & p_PostCode )
+	{
+		m_PostCode = p_PostCode;
+	}
+
+
 	// Get functions
 	const std::string & Syntax::GetText( ) const
 	{
 		return m_Text;
+	}
+
+	const std::string & Syntax::GetPreCode( ) const
+	{
+		return m_PreCode;
+	}
+
+	const std::string & Syntax::GetPostCode( ) const
+	{
+		return m_PostCode;
 	}
 
 

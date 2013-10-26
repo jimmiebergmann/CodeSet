@@ -40,7 +40,7 @@ namespace CS
 	{
 	}
 
-	bool CodeSet::WriteToFile( const char * p_pFilePath )
+	bool CodeSet::WriteToFile( const char * p_pFilePath, const bool p_UsePreCode )
 	{
 		// Make sure that we've loaded a syntax text
 		if( !m_pSyntax->GetText( ).size( ) )
@@ -56,7 +56,7 @@ namespace CS
 		}
 
 		// Get the cool string
-		char * pBuffer = WriteToString( );
+		char * pBuffer = WriteToString( p_UsePreCode );
 
 		// Errorcheck the buffer
 		if( !pBuffer )
@@ -111,7 +111,7 @@ namespace CS
 		return true;
 	}
 
-	char * CodeSet::WriteToString( )
+	char * CodeSet::WriteToString( const bool p_UsePreCode )
 	{
 		// Error check the fractal and syntax pointer
 		if( !m_pFractal || !m_pSyntax )
@@ -119,9 +119,13 @@ namespace CS
 			return NULL;
 		}
 
+		int fractalBufferStart = (p_UsePreCode) ? m_pSyntax->GetPreCode( ).size( ) : 0;
+
 		// Create a buffer
 		const int bufferSize =	( m_pFractal->GetWidth( ) * m_pFractal->GetHeight( ) ) +
-								m_pFractal->GetHeight( ) + 1; // need this for newlines and end char
+								m_pFractal->GetHeight( ) + 
+								fractalBufferStart + // Precode size
+								1; // need this for newlines and end char
 		char * pBuffer = new char[ bufferSize ];
 		memset( pBuffer, ' ', bufferSize );
 		
@@ -129,8 +133,17 @@ namespace CS
 		memset( pBuffer, ' ', bufferSize );
 		for( int y = 0; y < m_pFractal->GetHeight( ); y++ )
 		{
-			int i = ( ( m_pFractal->GetWidth( ) + 1 ) * y ) + m_pFractal->GetWidth( );
+			int i = ( ( m_pFractal->GetWidth( ) + 1 ) * y ) + m_pFractal->GetWidth( ) + fractalBufferStart;
 			pBuffer[ i ] = '\n';
+		}
+
+		// Set the pre code
+		if( p_UsePreCode )
+		{
+			for( int i = 0; i < m_pSyntax->GetPreCode( ).size( ); i++ )
+			{
+				pBuffer[ i ] = m_pSyntax->GetPreCode( )[ i ];
+			}
 		}
 
 		// Start by getting a word
@@ -143,19 +156,6 @@ namespace CS
 
 		// The total number of found points in a row
 		int foundPoints = 0; 
-
-		/*for( int i = 0; i < m_pSyntax->GetText( ).size( ); i++ )
-		{
-			word = m_pSyntax->GetWord( i );
-			 
-			i += word.size( );
-			if( word.size( ) ) // We need to decrease the index to correct the location
-			{
-				i--;
-			}
-			//std::cout << word << "\n";
-		}*/
-
 
 		// Go though the fractal
 		for( int y = 0; y < m_pFractal->GetHeight( ); y++ )

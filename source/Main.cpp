@@ -69,7 +69,7 @@ int main( )
 	pCodeSet = new CodeSet( pSyntax, pFractal );
 
 	// Write code set to a file
-	if( !pCodeSet->WriteToFile( "CodeSet_CodeSet.cpp" ) )
+	if( !pCodeSet->WriteToFile( "CodeSet_CodeSet.cpp", true ) )
 	{
 		std::cout << "Can not write to file." << std::endl;
 		return CloseApplication( );

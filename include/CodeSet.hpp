@@ -42,8 +42,8 @@ namespace CS
 		~CodeSet( );
 
 		// Public general function
-		bool WriteToFile( const char * p_pFilePath );
-		char * WriteToString( );
+		bool WriteToFile( const char * p_pFilePath, const bool p_UsePreCode );
+		char * WriteToString( const bool p_UsePreCode );
 
 	private:
 

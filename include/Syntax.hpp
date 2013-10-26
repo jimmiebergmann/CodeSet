@@ -48,13 +48,19 @@ namespace CS
 
 		// Set functions
 		void SetText( const std::string & p_Text );
+		void SetPreCode( const std::string & p_PreCode );
+		void SetPostCode( const std::string & p_PostCode );
 
 		// Get functions
 		const std::string & GetText( ) const;
+		const std::string & GetPreCode( ) const;
+		const std::string & GetPostCode( ) const;
 
 	protected:
 
 		std::string m_Text;
+		std::string m_PreCode;
+		std::string m_PostCode;
 
 	};
 
