@@ -40,58 +40,13 @@ namespace CS
 	{
 	}
 
-	// Public general function
-	/*bool CodeSet::OpenFile( const char * p_pFilePath, int p_MaxLength )
-	{
-		// Open the file
-		std::ifstream fin( p_pFilePath, std::fstream::binary );
-		if( !fin.is_open( ) )
-		{
-			return false;
-		}
-
-		// Read the file size and set the read size
-		fin.seekg( 0, fin.end );
-		int fileSize = fin.tellg( );
-		fin.seekg( 0, fin.beg );
-		int ReadSize = fileSize < p_MaxLength ? fileSize : p_MaxLength;
-
-		// Read the file
-		char * pBuffer = new char[ ReadSize + 1 ];
-		pBuffer[ ReadSize ] = 0;
-		fin.read( pBuffer, ReadSize );
-
-		// Set the string and remove the buffer.
-		m_String = pBuffer;
-		delete [ ] pBuffer;
-
-		// Close the file
-		fin.close( );
-
-		return true;
-	}*/
-
-	/*void CodeSet::ProcessString( )
-	{
-		// Ugly way of removing characters that we do not want.
-		for( int i = 0; i < m_String.size( ); i++ )
-		{
-			if( m_String[ i ] == '\n' ||
-				m_String[ i ] == '\r' ||
-				m_String[ i ] == '\t')
-			{
-				m_String[ i ] = ' ';
-			}
-		}
-	}*/
-
 	bool CodeSet::WriteToFile( const char * p_pFilePath )
 	{
-		if( !m_pSyntax->GetWordCount( ) )
+		// Make sure that we've loaded a syntax text
+		if( !m_pSyntax->GetText( ).size( ) )
 		{
 			return false;
 		}
-
 
 		// Open the file
 		std::ofstream fout( p_pFilePath );
@@ -100,17 +55,33 @@ namespace CS
 			return false;
 		}
 
-		/*for( int i = 0; i < m_pSyntax->GetWordCount( ); i++ )
+		// Get the cool string
+	/*	char * pBuffer = WriteToString( );
+
+		// Errorcheck the buffer
+		if( !pBuffer )
 		{
-			fout << m_pSyntax->GetWord( i ) << "\n";
-		}*/
+			return false;
+		}
 
-		// Loop through the fractal size
-		bool KeepLooping = true;
-		int currWordIndex = 0;
-		std::string currWord = m_pSyntax->GetWord( currWordIndex );
-		int FoundInts= 0;
+		// write the buffer
+		fout << pBuffer;
+		*/
+		// Test
+		for( int i = 0; i < m_pSyntax->GetText( ).size( ); i++ )
+		{
+			std::string word = m_pSyntax->GetWord( i );
+			i += word.size( );
+			fout << word << "\n";
+		}
 
+		// Delete the buffer
+		//delete [ ] pBuffer;
+
+		//fout << m_pSyntax->GetText( );
+
+		/*
+		// Loop through the fractal
 		for( int y = 0; y < m_pFractal->GetHeight( ); y++ )
 		{
 			for( int x = 0; x < m_pFractal->GetWidth( ); x++ )
@@ -121,47 +92,19 @@ namespace CS
 				// Print a character if the iteration == the precision
 				if( n == m_pFractal->GetPrecision( ) )
 				{
-					FoundInts++;
-
-					// Have we found a spot for the current word?
-					if( FoundInts == currWord.size( ) )
-					{
-						fout << currWord;
-						FoundInts = 0;
-
-						// Are we out of words?
-						if( ++currWordIndex == m_pSyntax->GetWordCount( )) 
-						{
-							KeepLooping = false;
-							break;
-						}
-
-						// Get the next word
-						currWord = m_pSyntax->GetWord( currWordIndex );
-					}
-
-					// Write the current character
-					//fout << "#";
+					// Write the current
+					fout << "#";
 				}
 				// Write a space if the current pixel is outside the mandelbrot set.
 				else
 				{
-
-					// Stop finding
-					FoundInts = 0;
 					fout << " ";
 				}
 			}
-
-			if( !KeepLooping )
-			{
-				break;
-			}
-
 			// Finish the file with a new line
 			fout << "\n";
 		}
-		
+		*/
 		// Close the file 
 		fout.close( );
 
@@ -170,7 +113,101 @@ namespace CS
 
 	char * CodeSet::WriteToString( )
 	{
-		return NULL;
+		// Error check the fractal and syntax pointer
+		if( !m_pFractal || !m_pSyntax )
+		{
+			return NULL;
+		}
+
+		// Create a buffer
+		const int bufferSize =	( m_pFractal->GetWidth( ) * m_pFractal->GetHeight( ) ) +
+								m_pFractal->GetHeight( ) + 1; // need this for newlines and end char
+		char * pBuffer = new char[ bufferSize ];
+		memset( pBuffer, ' ', bufferSize );
+		
+		// Clear and set the newlines
+		memset( pBuffer, ' ', bufferSize );
+		for( int y = 0; y < m_pFractal->GetHeight( ); y++ )
+		{
+			int i = ( ( m_pFractal->GetWidth( ) + 1 ) * y ) + m_pFractal->GetWidth( );
+			pBuffer[ i ] = '\n';
+		}
+
+		// Start by getting a word
+		unsigned int wordIndex = 0;
+		std::string word = m_pSyntax->GetWord( wordIndex );
+		if( !word.size( ) ) // Make sure that the word is at least something...
+		{
+			word = "#";
+		}
+
+		// The total number of found points in a row
+		int foundPoints = 0; 
+
+		for( int i = 0; i < m_pSyntax->GetText( ).size( ); i++ )
+		{
+			word = m_pSyntax->GetWord( i );
+
+			i += word.size( );
+			if( word.size( ) ) // We need to decrease the index to correct the location
+			{
+				i--;
+			}
+
+			std::cout << word << "\n";
+		}
+
+
+		// Go though the fractal
+		/*for( int y = 0; y < m_pFractal->GetHeight( ); y++ )
+		{
+			for( int x = 0; x < m_pFractal->GetWidth( ); x++ )
+			{
+				// current index
+				int ci = ( m_pFractal->GetWidth( ) * y ) + x + y; 
+
+				// Iterate the fractal
+				int n = m_pFractal->Iterate( x, y );
+
+				// We found a point
+				if( n == m_pFractal->GetPrecision( ) )
+				{
+					foundPoints++;
+
+					if( foundPoints == word.size( ) )
+					{
+						// Loop throguh and set every single character in the buffer
+						for( int i = 0; i < word.size( ); i++ )
+						{
+							int start = ci - word.size( ) + 1;
+							pBuffer[ start + i ] = word[ i ];
+						}
+
+						// Resert the point counter
+						foundPoints = 0;
+
+						// Get a new word
+						wordIndex += word.size( );
+	
+						word = m_pSyntax->GetWord( wordIndex );
+						if( !word.size( ) ) // Make sure that the word is at least something...
+						{
+							word = " ";
+						}
+					}
+				}
+				// Reset the found points if we didn't find a point at this coord
+				else
+				{
+					foundPoints = 0;
+				}
+			}
+		}*/
+
+		// Set end char
+		pBuffer[ bufferSize - 1 ] = 0;
+
+		return pBuffer;
 	}
 
 }

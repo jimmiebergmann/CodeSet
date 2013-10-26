@@ -1,296 +1,157 @@
+/*
+this
+is
+a
+multicomment
 
-namespace CS
+
+*/
+
+
+// ///////////////////////////////////////////////////////////////////////////
+// Copyright (C) 2013 Jimmie Bergmann - jimmiebergmann@gmail.com
+//
+// This software is provided 'as-is', without any express or
+// implied warranty. In no event will the authors be held
+// liable for any damages arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute
+// it freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented;
+//    you must not claim that you wrote the original software.
+//    If you use this software in a product, an acknowledgment
+//    in the product documentation would be appreciated but
+//    is not required.
+//
+// 2. Altered source versions must be plainly marked as such,
+//    and must not be misrepresented as being the original software.
+//
+// 3. This notice may not be removed or altered from any
+//    source distribution.
+// ///////////////////////////////////////////////////////////////////////////
+
+namespace CS1
 {
 
+	class Fractal
+	{
+
+	public:
+
+		// Constructor/destructor
+		Fractal(	const int p_Width, const int p_Height, /* lol lol lol   */
+					const int p_Precision, const double p_Zoom,
+					const double p_GridScaleX, const double p_GridScaleY,
+					const double p_GridDiffX, const double p_GridDiffY );
+		virtual ~Fractal( );
+
+		// Public general function
+		virtual int Iterate( const int p_X, const int p_Y ) = 0;
+		
+		// Set functions
+		void SetWidth( const int p_Width );
+		void SetHeight( const int p_Height );
+		void SetSize( const int p_Width, const int p_Height );
+		void SetPrecision( const int p_Precision );
+		void SetZoom( const double p_Zoom );
+
+		// Get functions
+		int GetWidth( ) const;
+		int GetHeight( ) const;
+		int GetPrecision( ) const;
+		double GetZoom( ) const;
+
+	protected:
+
+		int m_Width;
+		int m_Height;
+		int m_Precision;
+		double m_Zoom;
+		double m_GridScaleX;
+		double m_GridScaleY;
+		double m_GridDiffX;
+		double m_GridDiffY;
+
+	};
+
+};
+
+
+
+namespace CS1
+{
+
+
 	// Constructor/destructor
-	SyntaxCPP::SyntaxCPP( ) :
-		Syntax( )
+	Fractal::Fractal(	const int p_Width, const int p_Height,
+						const int p_Precision, const double p_Zoom,
+						const double p_GridScaleX, const double p_GridScaleY,
+						const double p_GridDiffX, const double p_GridDiffY ) :
+		m_Width( p_Width ),
+		m_Height( p_Height ),
+		m_Precision( p_Precision ),
+		m_Zoom( p_Zoom ),
+		m_GridScaleX( p_GridScaleX ),
+		m_GridScaleY( p_GridScaleY ),
+		m_GridDiffX( p_GridDiffX ),
+		m_GridDiffY( p_GridDiffY )
 	{
-
 	}
 
-	SyntaxCPP::~SyntaxCPP( )
+	Fractal::~Fractal( )
 	{
-
 	}
 
-	// Public general function
-	void SyntaxCPP::MakeCompact( )
+
+	// Set functions
+	void Fractal::SetWidth( const int p_Width )
 	{
-		// Loop through all the lines
-		bool IsMultiLineComment = false;
-
-		for( int l = 0; l < m_Lines.size( ); l++ )
-		{
-			std::string word = "";
-			bool IsAString = false;
-
-			// Loop through all the characters in the line
-			for( int c = 0; c < m_Lines[ l ].size( ); c++ )
-			{
-				char currChar = m_Lines[ l ][ c ];
-
-
-				// Are we collecting a string?
-				if( IsAString && currChar != '\"')
-				{
- 					word += currChar;
-					continue;
-				}
-
-				// Remove comments
-				
-
-				if( ( l + 1 ) < m_Lines.size( ) )
-				{
-					// Single line comments
-					if( currChar == '/' &&
-						m_Lines[ l ][ c + 1 ] == '/' )
-					{
-						// Finish the word
-						if( word.size( ) )
-						{
-							m_Words.push_back( word );
-							word = "";
-						}
-						break;
-					}
-				}
-
-
-				if( word.size( ) )
-				{
-
-					// Check for new lines, the word is done
-					if( currChar == '\n' ||
-						currChar== '\r' )
-					{
-						// Finish the word
-						if( word.size( ) )
-						{
-							m_Words.push_back( word );
-							word = "";
-						}
-						continue;
-					}
-
-					// Check for spaces and preriods, the word is done
-					if( currChar == ' ' )
-					{
-						// Finish the word
-						if( word.size( ) )
-						{
-							m_Words.push_back( word );
-							word = "";
-						}
-						continue;
-					}
-
-					// Check for special characters
-					if( currChar == ';' ||
-						currChar == ',' ||
-						currChar == '.' ||
-						currChar == '(' ||
-						currChar == ')' ||
-						currChar == '{' ||
-						currChar == '}' ||
-						currChar == '[' ||
-						currChar == ']' ||
-						currChar == '<' ||
-						currChar == '>' ||
-						currChar == '=' ||
-						currChar == '+' ||
-						currChar == '-' ||
-						currChar == '*' ||
-						currChar == '/' )
-					{
-						// Finish the word
-						if( word.size( ) )
-						{
-							m_Words.push_back( word );
-							word = "";
-						}
-
-						// Add the chracter
-						word += currChar;
-
-						// Special case for operators
-						if( ( l + 1 ) < m_Lines.size( ) )
-						{
-							char nextChar = m_Lines[ l ][ c + 1 ];
-							
-							if( nextChar != '\r' && nextChar != '\n' &&
-								nextChar == '=' ||
-								nextChar == '+' ||
-								nextChar == '-' ||
-								nextChar == '>' ||
-								nextChar == '<' )
-							{
-								// Push back the sign to the word vector
-								word += nextChar;
-
-								// Move to the next character
-								c++;
-							}
-								
-						}
-
-						m_Words.push_back( word );
-						word = "";
-						continue;
-					}
-
-					// This is the end of a string
-					if( IsAString )
-					{
-						if( currChar == '\"' )
-						{
-							// Push back the old word
-							if( word.size( ) )
-							{
-								word += currChar;
-								m_Words.push_back( word );
-								word = "";
-							}
-
-							IsAString = false;
-							continue;
-						}
-					}
-
-					// Add the character to the word
-					word += currChar;
-					continue;					
-				}
-				// Not started on a word yet
-				else
-				{
-					// Ignore spaces
-					if( currChar == ' ' )
-					{
-						continue;
-					}
-
-					// Skrip newline, tab and space
-					if( currChar == '\n' ||
-						currChar== '\r' ||
-						currChar== '\t' )
-					{
-						// Push back the old word
-						if( word.size( ) )
-						{
-							m_Words.push_back( word );
-							word = "";
-						}
-
-						continue;
-					}
-
-					// Preprocessor?
-					if(	currChar == '#' )
-					{
-						// Push back the old word
-						if( word.size( ) )
-						{
-							m_Words.push_back( word );
-							word = "";
-						}
-
-						// Puch back the rest of the line
-						word +=  m_Lines[ l ].substr( c );
-
-						// Remove newlines in the word
-						for( int i = 0; i < word.size( ); i++ )
-						{
-							if( word[ i ] == '\r' ||
-								word[ i ] == '\n' )
-							{
-								word.erase( i, 1 );
-							}
-						}
-
-						m_Words.push_back( word );
-						word = "";
-
-						// We are done with this line
-						break; 
-					}
-
-					// Is this a string?
-					if( currChar == '\"' )
-					{
-						// This is a new string
-						word += currChar;
-						IsAString = true;
-						continue;
-					}
-
-					// Add single character words
-					if(	currChar == ';' ||
-						currChar == ',' ||
-						currChar == '(' ||
-						currChar == ')' ||
-						currChar == '{' ||
-						currChar == '}' ||
-						currChar == '[' ||
-						currChar == ']' ||
-						currChar == '<' ||
-						currChar == '>' ||
-						currChar == '=' ||
-						currChar == '+' ||
-						currChar == '-' ||
-						currChar == '*' ||
-						currChar == '/' ||
-						currChar == '!' )
-					{
-						// Push back the old word
-						if( word.size( ) )
-						{
-							m_Words.push_back( word );
-							word = "";
-						}
-
-						// Push back the sign to the word vector
-						word += currChar;
-
-						// Special case for operators
-						if( ( l + 1 ) < m_Lines.size( ) )
-						{
-							char nextChar = m_Lines[ l ][ c + 1 ];
-							
-							if( nextChar != '\r' && nextChar != '\n' &&
-								nextChar == '=' ||
-								nextChar == '+' ||
-								nextChar == '-' ||
-								nextChar == '>' ||
-								nextChar == '<' )
-							{
-								// Push back the sign to the word vector
-								word += nextChar;
-
-								// Move to the next character
-								c++;
-							}
-								
-						}
-
-						m_Words.push_back( word );
-						word = "";
-						continue;
-					}
-
-					// Ok so, we found a character that is the beginning of a word
-					word += currChar;
-				}
-			}
-		}
-
-		for( int i = 0; i < 80; i++ )
-		{
-			std::cout << i << ": " << m_Words[ i ] << std::endl;
-		}
-
-
+		m_Width = p_Width;
 	}
+
+	void Fractal::SetHeight( const int p_Height )
+	{
+		m_Height = p_Height;
+	}
+
+	void Fractal::SetSize( const int p_Width, const int p_Height )
+	{
+		m_Width = p_Width;
+		m_Height = p_Height;
+	}
+
+	void Fractal::SetPrecision( const int p_Precision )
+	{
+		m_Precision = p_Precision;
+	}
+
+	void Fractal::SetZoom( const double p_Zoom )
+	{
+		m_Zoom = p_Zoom;
+	}
+
+	// Get functions
+	int Fractal::GetWidth( ) const
+	{
+		return m_Width;
+	}
+
+	int Fractal::GetHeight( ) const
+	{
+		return m_Height;
+	}
+
+	int Fractal::GetPrecision( ) const
+	{
+		return m_Precision;
+	}
+
+	double Fractal::GetZoom( ) const
+	{
+		return m_Zoom;
+	}
+
 
 }

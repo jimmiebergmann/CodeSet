@@ -39,10 +39,16 @@ namespace CS
 		SyntaxCPP( );
 		~SyntaxCPP( );
 
-		// Public general function
+		// Public virtual functions
 		virtual void MakeCompact( );
+		virtual std::string GetWord( const unsigned int p_Index );
 
+	private:
 
+		void RemoveMultiLineComments( );
+		void RemoveSingleLineComments( );
+		void RemoveTabsNewlines( );
+		
 	};
 
 }

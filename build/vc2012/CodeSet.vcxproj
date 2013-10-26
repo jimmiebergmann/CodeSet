@@ -20,6 +20,7 @@
     <ClInclude Include="..\..\include\Syntax.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\bin\Windows\32\CodeSet_CodeSet.cpp" />
     <ClCompile Include="..\..\source\CodeSet.cpp" />
     <ClCompile Include="..\..\source\SyntaxCPP.cpp" />
     <ClCompile Include="..\..\source\Fractal.cpp" />

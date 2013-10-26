@@ -26,7 +26,6 @@
 #define __CS_SYNTAX_HPP__
 
 #include <string>
-#include <vector>
 
 namespace CS
 {
@@ -40,22 +39,22 @@ namespace CS
 		Syntax( );
 		virtual ~Syntax( );
 
+		// Virtual functions
+		virtual void MakeCompact( ) = 0;
+		virtual std::string GetWord( const unsigned int p_Index ) = 0;
+
 		// Public general function
 		bool ReadFile( const char * p_FilePath, const int p_MaxCharacters );
-		virtual void MakeCompact( ) = 0;
-		void ClearLines( );
-		void ClearWords( );
+
+		// Set functions
+		void SetText( const std::string & p_Text );
 
 		// Get functions
-		unsigned int GetWordCount( ) const;
-		std::string GetWord( const unsigned int p_Index ) const;
+		const std::string & GetText( ) const;
 
 	protected:
 
-		typedef std::vector< std::string > StringVector;
-
-		StringVector m_Lines;
-		StringVector m_Words;
+		std::string m_Text;
 
 	};
 

@@ -31,8 +31,7 @@ namespace CS
 
 	// Constructor/destructor
 	Syntax::Syntax( ) :
-		m_Lines( ),
-		m_Words( )
+		m_Text( "" )
 	{
 	}
 
@@ -50,24 +49,39 @@ namespace CS
 			return false;
 		}
 
-		// Go through all the lines in the file
-		int characterCount = 0;
+		// Read the file size
+		fin.seekg( 0, fin.end );
+		int fileSize = fin.tellg( );
+		fin.seekg( 0, fin.beg );
+		int readSize = ( fileSize < p_MaxCharacters ) ? fileSize : p_MaxCharacters;
+		m_Text.reserve( readSize + 1 );
 
+		// Read all the lines
+		int currentSize = 0;
+		std::string tempString;
+		tempString.reserve( 128 );
 		while( !fin.eof( ) )
 		{
-			// Read a line
-			std::string temp;
-			std::getline( fin, temp );
+			// Get another 
+			std::getline( fin, tempString );
 
-			// Check if we've reached the character count, then break.
-			characterCount += temp.size( );
-			if( characterCount >= p_MaxCharacters )
+			// Remove the newline(if any)
+			if( tempString.size( ) > 1 )
 			{
+				tempString.erase( tempString.size( ) - 1, 1 );
+			}
+
+			// Cur the line if needed and then break( too many characters
+			currentSize += tempString.size( );
+			if( currentSize > readSize )
+			{
+				tempString[ currentSize - readSize ] = 0;
+				m_Text += tempString + '\n';
 				break;
 			}
 
-			// Push back the line to the line vector
-			m_Lines.push_back( temp );
+			m_Text += tempString + '\n';	 
+
 		}
 
 		// Close the file
@@ -76,25 +90,16 @@ namespace CS
 		return true;
 	}
 
-	void Syntax::ClearLines( )
+	// Set functions
+	void Syntax::SetText( const std::string & p_Text )
 	{
-		m_Lines.clear( );
-	}
-
-	void Syntax::ClearWords( )
-	{
-		m_Words.clear( );
+		m_Text = p_Text;
 	}
 
 	// Get functions
-	unsigned int Syntax::GetWordCount( ) const
+	const std::string & Syntax::GetText( ) const
 	{
-		return static_cast<unsigned int>( m_Words.size( ) );
-	}
-
-	std::string Syntax::GetWord( const unsigned int p_Index ) const
-	{
-		return m_Words[ p_Index ];
+		return m_Text;
 	}
 
 
